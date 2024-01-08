@@ -35,3 +35,5 @@ python ./scripts/esm_calc.py \
 --model esm1v_t33_650M_UR90S_5 \
 --output_heatmap data/output/output_heatmap_imshow.svg
 ```
+The outputfile will look like this:
+![alt text for screen readers](data/output/output_heatmap_imshow.svg "Heatmap")
