@@ -42,7 +42,23 @@ import numpy as np
     default="data/output/output_heatmap_imshow.svg",
     help="Output file",
 )
-def cli(input_file, modelsToUse, output_heatmap):
+@click.option(
+    "--output_table",
+    "output_table",
+    required=True,
+    type=str,
+    default="data/output/output_table.npz",
+    help="Output file",
+)
+@click.option(
+    "--plttype",
+    "plttype",
+    required=True,
+    type=str,
+    default="imshow",
+    help="imshow or colormesh. colormesh is better editable afterwards",
+)
+def cli(input_file, modelsToUse, output_heatmap, output_table, plttype):
     torch.hub.set_dir(os.getcwd()+"/..")
     # process data for esm model
     fasta=open(input_file, "r")
@@ -79,11 +95,18 @@ def cli(input_file, modelsToUse, output_heatmap):
         token_probs_np=False
         token_probs_np=np.mean( np.array([ all_scores ]), axis=0 ) [0, :, :] 
         print(token_probs_np.shape)
+
+        # save esm scores as npz
+        np.savez(output_table, token_probs_np)
+
         # plot
         plt.figure(figsize=(token_probs_np.shape[0]/5, 20))
         y_list=["L","A","G","V","S","E","R","T","I","D","P","K","Q","N","F","Y","M","H","W","C"]
-            
-        plt.imshow(np.transpose(token_probs_np) )
+        if plttype =="imshow":    
+            plt.imshow(np.transpose(token_probs_np) )
+        elif plttype=="colormesh":
+            plt.pcolormesh(np.transpose(token_probs_np) )
+        
 
         plt.yticks(np.arange(len(y_list)), labels=y_list, fontsize=6) #np.arange(len(y_list)),
         plt.xticks(ticks=np.linspace(0,token_probs_np.shape[0]-1, 50).astype(int), labels=np.linspace(0,token_probs_np.shape[0]-1, 50).astype(int)+1, fontsize=12)

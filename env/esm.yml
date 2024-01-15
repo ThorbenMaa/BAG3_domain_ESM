@@ -1,4 +1,4 @@
-name: Jirko
+name: BAG-domain
 channels:
   - conda-forge
 dependencies:
@@ -11,4 +11,5 @@ dependencies:
   - certifi
   - openssl
   - matplotlib
-prefix: /work/maass/.omics/mamba/envs/Jirko
+  - scipy
+  - pandas
